@@ -1,0 +1,34 @@
+library(quantmod)
+S=getSymbols('^GSPC',
+               src='yahoo',
+               return.class='zoo',
+               from='1995-01-01', 
+               to='2019-12-31',
+               periodicity='daily')
+S=GSPC$GSPC.Adjusted
+plot(S)
+  
+dlnS=diff(log(S))
+plot(dlnS)                     
+                              #We can see some years with high volatility and other years with lower volatility
+                              #Variance is not steady
+  
+hist(dlnS, 100, freq=FALSE)   #we can observe a negative skweness: Negative events have occurred more frequently than positive ones over the years.
+                             #Freq=false in order to have density and not the frequency
+                              
+grid()
+
+mean_r=mean(dlnS)              #daily return
+mean_r*250                     #annual return
+stdv=sd(dlnS)        
+
+x=seq(-0.1,0.1,0.001)         #The first two values are the extreme values of the graph. 0.001 is the magnitude of each step 
+normdistr=1/sqrt(2*pi*stdv^2)*exp(-0.5*(x-mean_r)^2/stdv^2)  #Probability Density Function of a Normal Distribution
+
+plot(x,normdistr)
+grid()
+
+hist(dlnS, 100, freq = FALSE)
+grid()
+lines(x,normdistr, col='red',
+      lwd=2)                  #We can observe the "Fat Tails Phenomenon" : we can define it as a Leptokurtic Distribution
