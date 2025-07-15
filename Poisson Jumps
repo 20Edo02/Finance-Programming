@@ -1,0 +1,32 @@
+X=rpois(1000, 0.01)      #To compute random density for Poisson Distribution
+plot(X)                  #Almost every time I get 0. I sometimes get 1: this means that the rare event took place
+                         #In order to be more realistic, gamma shoul be negative, as it is more likely to see the occurence of a negative event
+
+#Diffusion-Jump Process Simulation
+T=10  #years
+N=100 #simulations
+mu=0.07 #annual mean return
+sigma=0.15 #volatility
+phi=1  #Annual jump frequency. In the real word it is way less
+g=-0.2 #jump intensity        #
+dt=1/250 #subperiods (based on years) 
+
+Sim=array(NA,dim=c(T/dt,N))        #rows(day),columns(simulations number)
+Sim[1,]=10
+dW=array(rnorm(T/dt*N,0,sqrt(dt)),dim=c(T/dt,N))     #I create both Wiener and Poisson processes
+dPI=array(rpois(T/dt*N,phi*dt),dim=c(T/dt,N))      
+matplot(dW,type='l')                                #If we plot it we can see the omoschedasticity. NICE!!!
+matplot(dPI,type='l')
+
+
+for(i in 2:(T/dt)){
+  Sim[i,]=Sim[i-1,]+Sim[i-1,]*(mu-phi*g)*dt+ #drift
+    Sim[i-1,]*sigma*dW[i-1,]+                #diffusion  
+    Sim[i-1,]*g*dPI[i-1,]                    #jump     
+}
+matplot(Sim, type='l', col='lightgrey')         #This is the simulation graph
+lines(Sim[,6], col='red')                 #I choose one path and I draw it in red
+plot(Sim[,1],type='l')                             #every row, first column
+plot(diff(log(Sim[,1])),type='l')                   #I can see the path with the jumps included
+
+
