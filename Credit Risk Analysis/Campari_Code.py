@@ -145,4 +145,5 @@ plt.savefig("fig.png", dpi=300, bbox_inches="tight")
 # Output di verifica
 print(f"La traiettoria evidenziata è arrivata a un valore minimo di: {minimi_per_traiettoria[indice_piu_vicina]:.2f}")
 
+
 print(f"Distanza minima dalla riga rossa: {abs(minimi_per_traiettoria[indice_piu_vicina] - D):.2f}")
